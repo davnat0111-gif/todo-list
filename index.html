@@ -17,7 +17,8 @@
       if (theme === "light" || theme === "dark") document.documentElement.dataset.theme = theme;
     } catch {}
   </script>
-  <link rel="stylesheet" href="style.css">
+  <!-- ?v=2: новая версия файлов, чтобы браузер не брал старые из кэша -->
+  <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
   <main class="page">
@@ -77,6 +78,6 @@
     <button class="toast__undo" id="toast-undo" type="button">Вернуть</button>
   </div>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=2"></script>
 </body>
 </html>
