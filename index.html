@@ -2,22 +2,51 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Простой список задач: добавляйте, отмечайте и удаляйте задачи.">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Список задач в духе бумажного ежедневника: добавляйте, отмечайте и удаляйте задачи.">
   <title>Список задач</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%232f6f5e'/><path d='M9 16.5l5 5 9-11' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='16' fill='%23b9472f'/><path d='M9.5 16.5l4.5 4.5 8.5-10' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- media="print" + onload: страница не ждёт шрифты, если связь медленная -->
+  <link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;1,500&display=swap">
+  <script>
+    // Применяем сохранённую тему до отрисовки, чтобы страница не мигала.
+    try {
+      const theme = localStorage.getItem("todo-list.theme");
+      if (theme === "light" || theme === "dark") document.documentElement.dataset.theme = theme;
+    } catch {}
+  </script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="app">
-    <header class="app__header">
-      <h1>Список задач</h1>
-      <p class="counter" id="counter" aria-live="polite"></p>
+  <main class="page">
+    <div class="topbar">
+      <h1 class="topbar__title">Список задач</h1>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Переключить тему" title="Переключить тему">
+        <svg class="theme-toggle__sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3 7 7M17 17l1.7 1.7M5.3 18.7 7 17M17 7l1.7-1.7"/></svg>
+        <svg class="theme-toggle__moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>
+      </button>
+    </div>
+
+    <header class="hero">
+      <div class="hero__text">
+        <p class="hero__weekday" id="weekday"></p>
+        <p class="hero__date" id="date"></p>
+        <p class="hero__summary" id="summary" aria-live="polite"></p>
+      </div>
+      <div class="ring" id="ring" role="img">
+        <svg viewBox="0 0 88 88" aria-hidden="true">
+          <circle class="ring__track" cx="44" cy="44" r="38"/>
+          <circle class="ring__value" id="ring-value" cx="44" cy="44" r="38" pathLength="100"/>
+        </svg>
+        <span class="ring__label" id="ring-label" aria-hidden="true">0%</span>
+      </div>
     </header>
 
-    <form class="add-form" id="add-form" autocomplete="off">
+    <form class="composer" id="add-form" autocomplete="off">
       <input
-        class="add-form__input"
+        class="composer__input"
         id="task-input"
         type="text"
         maxlength="200"
@@ -25,13 +54,28 @@
         aria-label="Текст новой задачи"
         autofocus
       >
-      <button class="add-form__button" type="submit">Добавить</button>
+      <button class="composer__button" type="submit">Добавить</button>
     </form>
 
-    <ul class="task-list" id="task-list"></ul>
+    <div class="filters" role="group" aria-label="Показать задачи">
+      <button class="filters__item" type="button" data-filter="all" aria-pressed="true">Все <span id="count-all"></span></button>
+      <button class="filters__item" type="button" data-filter="active" aria-pressed="false">Активные <span id="count-active"></span></button>
+      <button class="filters__item" type="button" data-filter="done" aria-pressed="false">Готовые <span id="count-done"></span></button>
+    </div>
 
-    <p class="empty" id="empty" hidden>Задач пока нет. Добавьте первую!</p>
+    <ul class="tasks" id="task-list"></ul>
+
+    <p class="empty" id="empty" hidden></p>
+
+    <div class="footer" id="footer" hidden>
+      <button class="footer__clear" id="clear-done" type="button">Очистить выполненные</button>
+    </div>
   </main>
+
+  <div class="toast" id="toast" role="status" hidden>
+    <span id="toast-text"></span>
+    <button class="toast__undo" id="toast-undo" type="button">Вернуть</button>
+  </div>
 
   <script src="script.js"></script>
 </body>
