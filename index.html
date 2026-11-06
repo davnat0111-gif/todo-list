@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Простой список задач: добавляйте, отмечайте и удаляйте задачи.">
+  <title>Список задач</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%232f6f5e'/><path d='M9 16.5l5 5 9-11' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="app__header">
+      <h1>Список задач</h1>
+      <p class="counter" id="counter" aria-live="polite"></p>
+    </header>
+
+    <form class="add-form" id="add-form" autocomplete="off">
+      <input
+        class="add-form__input"
+        id="task-input"
+        type="text"
+        maxlength="200"
+        placeholder="Что нужно сделать?"
+        aria-label="Текст новой задачи"
+        autofocus
+      >
+      <button class="add-form__button" type="submit">Добавить</button>
+    </form>
+
+    <ul class="task-list" id="task-list"></ul>
+
+    <p class="empty" id="empty" hidden>Задач пока нет. Добавьте первую!</p>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
